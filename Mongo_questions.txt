@@ -1,0 +1,140 @@
+############ MongoDB questions
+
+8. Give the number of medicines taken with a lozenge (TABLET;BUCCAL, SUBLINGUAL). Make sure that your query only shows the name of the drug.
+
+db.getCollection('bioinf_mongo_examen').find(
+    {"method_of_admission":"TABLET;BUCCAL, SUBLINGUAL"}
+    ,{drug:1, _id:0} )
+
+RESULT: The drug is called "DEMULEN 1/35-28".
+
+9. Give the number of medicines that have side effects in more than 8% of cases.
+
+db.getCollection('bioinf_mongo_examen').count(
+    { percentage_of_side_effects: {$gt:8.0} } )
+
+RESULT: 399 drugs have a percentage of side effects that is greater than 8%. 
+
+10. Give the names of the companies that produce medicines that on average  cause side effects in more than 10% of cases? Sort your results according to decreasing percentage of side effects. (10% or more: $gte instead of $gt)
+
+db.getCollection('bioinf_mongo_examen').aggregate([
+    {$group: {_id: {company:"$company"},
+                "avgPrct": {$avg: "$percentage_of_side_effects"} } }
+    ,{$match: {avgPrct: {$gt:10}}}
+    ,{$sort: {avgPrct: -1} } ])
+
+RESULT: 2 companies
+	"company" : "Galderma Laboratories, L.P."	"avgPrct" : 11.5
+	"company" : "Watson Pharmaceuticals, Inc."	"avgPrct" : 10.65
+ 
+11. Specify the lower and upper limits of the percentage of side effects of medicines within companies that produce more than 1 drug.
+
+db.getCollection('bioinf_mongo_examen').aggregate([
+    {$group: {_id: {company:"$company"},nrDrugs:{$sum:1}  
+        ,minSideEffects:{$min:"$percentage_of_side_effects"}
+        ,maxSideEffects:{$max:"$percentage_of_side_effects"} } }       
+    ,{$match: {nrDrugs: {$gt:1} } } ] )
+
+RESULT: 238 companies 
+
+/* 1 */
+{
+    "_id" : {
+        "company" : "Roche"
+    },
+    "nrDrugs" : 4.0,
+    "minSideEffects" : 5.2,
+    "maxSideEffects" : 7.1
+}
+
+/* 2 */
+{
+    "_id" : {
+        "company" : "GlaxoSmithKline"
+    },
+    "nrDrugs" : 5.0,
+    "minSideEffects" : 6.0,
+    "maxSideEffects" : 8.0
+}
+
+/* 3 */
+{
+    "_id" : {
+        "company" : "AkPharma Inc"
+    },
+    "nrDrugs" : 30.0,
+    "minSideEffects" : 3.8,
+    "maxSideEffects" : 15.0
+}
+
+/* 4 */
+{
+    "_id" : {
+        "company" : "Jazz Pharmaceuticals plc"
+    },
+    "nrDrugs" : 3.0,
+    "minSideEffects" : 8.0,
+    "maxSideEffects" : 8.5
+}
+
+/* 5 */
+{
+    "_id" : {
+        "company" : "EUSA Pharma"
+    },
+    "nrDrugs" : 10.0,
+    "minSideEffects" : 1.5,
+    "maxSideEffects" : 8.5
+}
+
+/* 6 */
+{
+    "_id" : {
+        "company" : "Silvergate Pharmaceuticals, Inc."
+    },
+    "nrDrugs" : 2.0,
+    "minSideEffects" : 7.4,
+    "maxSideEffects" : 8.0
+}
+
+/* 7 */
+{
+    "_id" : {
+        "company" : "Anchen Pharmaceuticals, Inc"
+    },
+    "nrDrugs" : 36.0,
+    "minSideEffects" : 0.0,
+    "maxSideEffects" : 11.0
+}
+
+/* 8 */
+{
+    "_id" : {
+        "company" : "Chelsea Therapeutics"
+    },
+    "nrDrugs" : 3.0,
+    "minSideEffects" : 6.5,
+    "maxSideEffects" : 6.8
+}
+
+/* 9 */
+{
+    "_id" : {
+        "company" : "Teva Pharmaceuticals USA, Inc."
+    },
+    "nrDrugs" : 3.0,
+    "minSideEffects" : 5.2,
+    "maxSideEffects" : 8.5
+}
+
+/* 10 */
+{
+    "_id" : {
+        "company" : "Dey Pharma"
+    },
+    "nrDrugs" : 5.0,
+    "minSideEffects" : 6.0,
+    "maxSideEffects" : 8.0
+}
+
+
