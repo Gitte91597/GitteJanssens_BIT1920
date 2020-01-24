@@ -1,0 +1,25 @@
+############# EnsEmbl (REST) API
+
+12. Give the mapping location of the variant rs499899635 in the zebrafish?
+
+curl "http://rest.ensembl.org/variation/zebrafish/rs499899635" -H 'Content-type:application/json' 
+
+RESULT: 
+{"MAF":null,"ancestral_allele":null,"evidence":[],"minor_allele":null,"ambiguity":"Y","source":"Variants (including SNPs and indels) imported from dbSNP (mapped to GRCz11)","var_class":"SNP","synonyms":[],"name":"rs499899635","most_severe_consequence":"intergenic_variant","mappings":[{"end":10138412,"allele_string":"T/C","assembly_name":"GRCz11","start":10138412,"seq_region_name":"10","coord_system":"chromosome","location":"10:10138412-10138412","strand":1}]}
+
+Mapping location: "location":"10:10138412-10138412" (in "mappings" array)
+	
+13. Give the first 100 bases of the genomic FASTA sequence of the Notch1 gene in the mouse.
+
+Steps: 
+- Taxonomy browser -> mus musculus (taxonomy ID: 10090) -> Gene: link to NCBI gene -> search for correct gene for mus musculus 
+- Notch1 gene: NC_000068.7 -> Chromosome 2: 26457902..26503822) 
+- First 100 bases: 26.457.902 + 100 =  26.458.002
+
+curl "http://rest.ensembl.org/sequence/region/mouse/2:26457902..26458002?type=genomic" -H 'Content-type:text/x-fasta' 
+
+RESULT: 
+	>chromosome:GRCm38:2:26457902:26458002:1
+GTTTAGCAAAATGTGGACAACCATCAGTATCATTTTTATTGCAAATTAGTTAACAAAAAA
+AGATGAAAAAAATACATCATTTTCATTACCTACAGTTTTGC
+
