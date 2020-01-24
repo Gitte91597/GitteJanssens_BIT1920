@@ -1,0 +1,34 @@
+###### Question 2: normalisation
+KEYS: capital letters 
+
+    Personnel number
+    Name
+    Date of birth
+    Lab code
+    Lab name
+    Research code
+    Research description
+    Research supervisor
+
+## UNF: list all columns 
+
+Lab(Personnel number, Name, Date of birth, lab code, lab name, research code, research description, research supervisor)
+
+## 1NF: seperate repeating groups
+
+Lab(PERSONNEL NUMBER, Name, Date of birth, lab code, lab name)
+Research(PERSONNEL NUMBER, RESEARCH CODE, research description, research supervisor)
+
+##2NF: every element has to rely on the entire key (no partial dependencies)
+
+Personnel(PERSONNEL NUMBER, Name, Date of birth)
+Lab(LAB CODE, lab name)
+Research(RESEARCH CODE, research description, research supervisor)
+Project(PERSONNEL NUMBER,RESEARCH CODE)
+
+
+## 3NF: every element has to be directly dependent on the entire key, not through another element
+
+	= 2NF 
+
+
