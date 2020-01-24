@@ -1,0 +1,58 @@
+######### SQL questions
+
+4. Give the name and length of the third largest gene in the genome.
+
+select (seq_region_end-seq_region_start+1) AS gene_length, gene_name from gene
+order by gene_length desc limit 1 offset 2;
+
+RESULT: 
+	Gene length: 2493040	Gene name: PARP1
+
+5. Give the name of the gene with the most exons? Give the number of exons of this gene?
+
+select count(*) AS count, gene_name  from gene g 
+join transcript t on t.gene_id=g.gene_id 
+join exon_transcript ext on ext.transcript_id=t.transcript_id 
+join exon e on e.exon_id=ext.exon_id
+group by gene_name
+order by count desc
+limit 1;
+
+RESULT:
+	Gene name: COL11A2	Nr of exons: 3598
+
+6. 
+a) Give the name of the chromosome with the most genes associated with breast cancer. 
+
+select chromosome, count(*) as NrGenes from gene 
+where description like '%breast_cancer%' 
+group by chromosome 
+order by NrGenes desc
+limit 1;
+
+RESULT: 
+	Chromosome: 16		NrGenes: 2
+
+
+b) Give the number of transcripts of this chromosome? 
+
+select chromosome, count(*) as NrTranscripts from gene g
+join transcript t on g.gene_id = t.gene_id
+where chromosome=16
+group by chromosome 
+order by NrTranscripts desc;
+
+RESULT:
+	Chromosome: 16		NrTranscripts: 3636
+
+7. 
+a) Give the number of rows from the exon table and do the same for the exon_transcript table. 
+
+select count(*) from exon;		RESULT: 642.590
+select count(*) from exon_transcript;	RESULT: 1.178.393
+
+b) Explain why there is a difference in number of rows.
+
+A single exon can code for plural transcripts, but one transcript can also contain plural exons. Since all the relations between every single exon and transcript are in the exon_transcript table, the table is longer. 
+
+
